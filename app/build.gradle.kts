@@ -26,14 +26,36 @@ android {
       proguardFiles("proguard-rules.pro")
     }
   }
-  
-  packaging {
-    resources.excludes.addAll(
-      arrayOf("META-INF/README.md", "META-INF/CHANGES", "bundle.properties", "plugin.properties")
-    )
 
-    jniLibs { useLegacyPackaging = true }
-  }
+  packaging {
+        resources {
+            excludes.addAll(
+                listOf(
+                    "META-INF/INDEX.LIST",
+                    "META-INF/eclipse.inf",
+                    "META-INF/CHANGES",
+                    "META-INF/README.md",
+                    "META-INF/DEPENDENCIES",
+                    "about_files/LICENSE-2.0.txt",
+                    "META-INF/AL2.0",
+                    "META-INF/LGPL2.1",
+                    "plugin.xml",
+                    "plugin.properties",
+                    "about.mappings",
+                    "about.properties",
+                    "about.ini",
+                    "src/*",
+                )
+            )
+
+            pickFirsts.addAll(
+                listOf(
+                    "OSGI-INF/l10n/plugin.properties"
+                )
+            )
+        }
+        jniLibs { useLegacyPackaging = true }
+    }
 
   lint { abortOnError = false }
   
@@ -41,6 +63,25 @@ android {
     viewBinding = true
     buildConfig = true
   }
+
+  flavorDimensions += "environment"
+
+    productFlavors {
+        create("dev") {
+            dimension = "environment"
+            isDefault = true
+        }
+        create("prod") {
+            dimension = "environment"
+        }
+    }
+
+    splits {
+        abi {
+            isEnable = true
+            isUniversalApk = true
+        }
+    }
 }
 
 dependencies {
